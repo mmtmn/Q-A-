@@ -13,6 +13,7 @@ class QStarAgent:
         old_value = self.q_table.get((state, action), 0)
         next_max = max(self.q_table.get((next_state, a), 0) for a in self.possible_actions(next_state))
         new_value = (1 - self.learning_rate) * old_value + self.learning_rate * (reward + self.discount_factor * next_max)
+        print(f"Old value: {old_value}, Next max: {next_max}, New value: {new_value}")
         self.q_table[(state, action)] = new_value
     
     def get_neighbors(self, state):
@@ -48,7 +49,7 @@ class QStarAgent:
 
         while frontier:
             _, current_state = heapq.heappop(frontier)
-
+            print(f"Current state: {current_state}, Frontier: {frontier}")
             # Check if goal is reached
             if current_state == goal_state:
                 break
@@ -59,6 +60,7 @@ class QStarAgent:
                 if next_state not in cost_so_far or new_cost < cost_so_far[next_state]:
                     cost_so_far[next_state] = new_cost
                     priority = new_cost + self.heuristic(next_state, goal_state)
+                    print(f"New cost: {new_cost}, Priority: {priority}, Next state: {next_state}")
                     heapq.heappush(frontier, (priority, next_state))
                     came_from[next_state] = current_state
 
@@ -79,7 +81,7 @@ class QStarAgent:
     def choose_action(self, state, goal_state, environment):
         # First, get all possible actions for the current state
         possible_actions = self.possible_actions(state)
-
+        print(f"Current state: {state}, Possible actions: {possible_actions}")
         # If there are no possible actions, return None or a default action
         if not possible_actions:
             return None
@@ -102,7 +104,7 @@ class QStarAgent:
                 if action_value > best_action_value:
                     best_action = action
                     best_action_value = action_value
-
+        print(f"Chosen action: {best_action}")
         return best_action
 
     def predict_next_state(self, current_state, action):
@@ -112,7 +114,7 @@ class QStarAgent:
 
         # Example for a grid environment:
         next_state = list(current_state)  # Assuming current_state is a tuple/list (x, y)
-
+        print(f"Current state: {current_state}, Action: {action}, Next state: {next_state}")
         if action == 'up':
             next_state[1] -= 1  # Move up in the grid
         elif action == 'down':
@@ -152,9 +154,6 @@ class QStarAgent:
         # Additional checks can be added here, depending on the environment's rules
 
         return True  # State is valid
-
-
-
 
 
 class GridEnvironment:
@@ -239,7 +238,7 @@ class GridEnvironment:
         return True  # State is valid if it's inside the grid and not an obstacle
 
 # set up
-total_episodes=10
+total_episodes=1000
 
 # Parameters for your grid environment
 width = 10  # Example width
@@ -272,7 +271,7 @@ for episode in range(total_episodes):
 
         # Perform the action in the environment
         next_state, reward, done = environment.step(action)
-
+        print(f"State: {state}, Action: {action}, Next state: {next_state}, Reward: {reward}")
         # Learn from the action's results
         agent.learn(state, action, reward, next_state)
 
@@ -291,7 +290,7 @@ while not environment.is_done(state):
     
     # Perform the action, get new state and other information
     next_state, reward, done = environment.step(action)
-    
+    print(f"Current state: {current_state}, Action: {action}, Next state: {next_state}")
     # Update the current state
     current_state = next_state
 
