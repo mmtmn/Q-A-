@@ -1,3 +1,5 @@
+import heapq
+
 class QStarAgent:
     def __init__(self, learning_rate, discount_factor, heuristic_function):
         self.q_table = {}  # Initialize Q-table
@@ -11,8 +13,6 @@ class QStarAgent:
         next_max = max(self.q_table.get((next_state, a), 0) for a in possible_actions(next_state))
         new_value = (1 - self.learning_rate) * old_value + self.learning_rate * (reward + self.discount_factor * next_max)
         self.q_table[(state, action)] = new_value
-
-    import heapq
 
 def a_star_search(self, start_state, goal_state):
     # Priority queue to hold states to explore, format: (priority, state)
@@ -56,33 +56,33 @@ def heuristic(self, state, goal_state):
 
 
     def choose_action(self, state, goal_state):
-    # First, get all possible actions for the current state
-    possible_actions = self.possible_actions(state)
+        # First, get all possible actions for the current state
+        possible_actions = self.possible_actions(state)
 
-    # If there are no possible actions, return None or a default action
-    if not possible_actions:
-        return None
+        # If there are no possible actions, return None or a default action
+        if not possible_actions:
+            return None
 
-    # Use A* to find the most promising next state towards the goal
-    best_path = self.a_star_search(state, goal_state)
-    if len(best_path) < 2:  # If A* doesn't provide a next step, use default Q-learning
-        return max(possible_actions, key=lambda a: self.q_table.get((state, a), 0))
+        # Use A* to find the most promising next state towards the goal
+        best_path = self.a_star_search(state, goal_state)
+        if len(best_path) < 2:  # If A* doesn't provide a next step, use default Q-learning
+            return max(possible_actions, key=lambda a: self.q_table.get((state, a), 0))
 
-    next_state_on_path = best_path[1]  # Next state in the A* path
+        next_state_on_path = best_path[1]  # Next state in the A* path
 
-    # Choose the action that leads to the next_state_on_path
-    # This requires knowing how actions translate to next states, which depends on your environment
-    best_action = None
-    best_action_value = float('-inf')
-    for action in possible_actions:
-        predicted_next_state = self.predict_next_state(state, action)
-        if predicted_next_state == next_state_on_path:
-            action_value = self.q_table.get((state, action), 0)
-            if action_value > best_action_value:
-                best_action = action
-                best_action_value = action_value
+        # Choose the action that leads to the next_state_on_path
+        # This requires knowing how actions translate to next states, which depends on your environment
+        best_action = None
+        best_action_value = float('-inf')
+        for action in possible_actions:
+            predicted_next_state = self.predict_next_state(state, action)
+            if predicted_next_state == next_state_on_path:
+                action_value = self.q_table.get((state, action), 0)
+                if action_value > best_action_value:
+                    best_action = action
+                    best_action_value = action_value
 
-    return best_action
+        return best_action
 
 def predict_next_state(self, current_state, action):
     # The implementation here is environment-specific. 
